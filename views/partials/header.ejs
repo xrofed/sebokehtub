@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <link rel="dns-prefetch" href="//www.google-analytics.com">
+  <link rel="dns-prefetch" href="//cdn-images.bokeptube.web.id">
+  <meta name="google-site-verification" content="<%= process.env.META_GOOLE_VERIFICATION || 'default-google-verification' %>" />
+  <meta name="yandex-verification" content="<%= process.env.META_YANDEX_VERIFICATION || 'default-yandex-verification' %>" />
+  <meta name="msvalidate.01" content="<%= process.env.META_MSVALIDATE || 'default-msvalidate' %>" />
+
+
+<title><%= typeof seo_title !== 'undefined' ? seo_title: current_title %></title>
+<meta name="description" content="<%= typeof seo_description !== 'undefined' ? seo_description: current_desc %>">
+
+<meta name="robots" content="<%= typeof no_index !== 'undefined' && no_index ? 'noindex, follow': (typeof robots_meta !== 'undefined' ? robots_meta: 'follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large') %>">
+
+<link rel="canonical" href="<%= typeof seo_canonical !== 'undefined' ? seo_canonical: current_url %>">
+<link rel="shortcut icon" href="<%= typeof favicon_url !== 'undefined' ? favicon_url: '/uploads/favicon.ico' %>" type="image/x-icon">
+<link rel="icon" href="<%= typeof favicon_url !== 'undefined' ? favicon_url: '/uploads/favicon.ico' %>" type="image/x-icon">
+
+<link rel="alternate" type="application/rss+xml" title="<%= site_name %> - Video Terbaru" href="/rss">
+<link rel="sitemap" type="application/xml" title="Sitemap Utama" href="/sitemap.xml">
+<link rel="sitemap" type="application/xml" title="Sitemap Video (Google)" href="/sitemap-video.xml">
+
+<% if (typeof rss_category_slug !== 'undefined' && rss_category_slug) {
+%>
+<link rel="alternate" type="application/rss+xml"
+title="<%= site_name %> - Kategori <%= display_cat %>"
+href="/rss/category/<%= rss_category_slug %>">
+<%
+} %>
+
+<!-- Open Graph Meta Tags -->
+<meta property="og:type" content="<%= typeof og_type !== 'undefined' ? og_type: 'website' %>">
+<meta property="og:url" content="<%= typeof seo_canonical !== 'undefined' ? seo_canonical: current_url %>">
+<meta property="og:title" content="<%= typeof seo_title !== 'undefined' ? seo_title: current_title %>">
+<meta property="og:description" content="<%= typeof seo_description !== 'undefined' ? seo_description: current_desc %>">
+<meta property="og:site_name" content="<%= site_name %>">
+
+<% if (typeof article_tags !== 'undefined' && article_tags.length > 0) {
+%>
+<% article_tags.forEach(tag => {
+%>
+<meta property="article:tag" content="<%= tag %>">
+<%
+}) %>
+<%
+} %>
+
+<% if (typeof article_section !== 'undefined') {
+%>
+<meta property="article:section" content="<%= article_section %>">
+<%
+} %>
+
+<meta property="og:image" content="<%= typeof og_image !== 'undefined' ? og_image: current_image %>">
+<meta property="og:image:secure_url" content="<%= typeof og_image !== 'undefined' ? og_image: current_image %>">
+<meta property="og:image:width" content="<%= typeof og_image_width !== 'undefined' ? og_image_width: 854 %>">
+<meta property="og:image:height" content="<%= typeof og_image_height !== 'undefined' ? og_image_height: 480 %>">
+<meta property="og:image:alt" content="<%= typeof seo_title !== 'undefined' ? seo_title.split(' - ')[0]: current_title.split(' - ')[0] %>">
+<meta property="og:image:type" content="image/webp">
+
+<% if (typeof og_date !== 'undefined') {
+%>
+<meta property="article:published_time" content="<%= og_date %>">
+<%
+} %>
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="<%= typeof twitter_card !== 'undefined' ? twitter_card: 'summary_large_image' %>">
+<meta name="twitter:title" content="<%= typeof seo_title !== 'undefined' ? seo_title: current_title %>">
+<meta name="twitter:description" content="<%= typeof seo_description !== 'undefined' ? seo_description: current_desc %>">
+<meta name="twitter:site" content="<%= typeof twitter_site !== 'undefined' ? twitter_site: '@' + site_name %>">
+<meta name="twitter:creator" content="<%= typeof twitter_creator !== 'undefined' ? twitter_creator: '@' + site_name %>">
+<meta name="twitter:image" content="<%= typeof twitter_image !== 'undefined' ? twitter_image: current_image %>">
+<meta name="twitter:label1" content="Ditulis oleh">
+<meta name="twitter:data1" content="<%= typeof schema_author_name !== 'undefined' ? schema_author_name: site_name %>">
+<meta name="twitter:label2" content="Waktunya membaca">
+<meta name="twitter:data2" content="Kurang dari semenit">
+
+<% if (typeof twitter_player !== 'undefined') {
+%>
+<meta name="twitter:player" content="<%= twitter_player %>">
+<meta name="twitter:player:width" content="1280">
+<meta name="twitter:player:height" content="720">
+<%
+} %>
+
+
+<% if (typeof schema_publisher_name !== 'undefined') {
+%>
+<script type="application/ld+json" class="rank-math-schema">
+{
+"@context": "https://schema.org",
+"@graph": [{
+"@type": ["Person",
+"Organization"],
+"@id": "<%= site_url %>/#person",
+"name": "<%= schema_publisher_name %>",
+"sameAs": "https://twitter.com/<%= site_name %>"
+},
+{
+"@type": "WebSite",
+"@id": "<%= site_url %>/#website",
+"url": "<%= site_url %>",
+"name": "<%= site_name %>",
+"alternateName": "<%= site_name %>",
+"publisher": {
+"@id": "<%= site_url %>/#person"
+},
+"inLanguage": "id"
+},
+{
+"@type": "ImageObject",
+"@id": "<%= typeof og_image !== 'undefined' ? og_image: current_image %>",
+"url": "<%= typeof og_image !== 'undefined' ? og_image: current_image %>",
+"width": <%= typeof og_image_width !== 'undefined' ? og_image_width: 854 %>,
+"height": <%= typeof og_image_height !== 'undefined' ? og_image_height: 480 %>,
+"inLanguage": "id"
+},
+{
+"@type": "WebPage",
+"@id": "<%= typeof seo_canonical !== 'undefined' ? seo_canonical: current_url %>/#webpage",
+"url": "<%= typeof seo_canonical !== 'undefined' ? seo_canonical: current_url %>",
+"name": "<%= typeof seo_title !== 'undefined' ? seo_title: current_title %>",
+"datePublished": "<%= typeof schema_date !== 'undefined' ? schema_date: new Date().toISOString().replace('Z', '+07:00') %>",
+"dateModified": "<%= typeof schema_date !== 'undefined' ? schema_date: new Date().toISOString().replace('Z', '+07:00') %>",
+"isPartOf": {
+"@id": "<%= site_url %>/#website"
+},
+"primaryImageOfPage": {
+"@id": "<%= typeof og_image !== 'undefined' ? og_image: current_image %>"
+},
+"inLanguage": "id"
+},
+{
+"@type": "Person",
+"@id": "<%= typeof schema_author_url !== 'undefined' ? schema_author_url: site_url + '/author/' + site_name.toLowerCase() %>",
+"name": "<%= typeof schema_author_name !== 'undefined' ? schema_author_name: site_name %>",
+"url": "<%= typeof schema_author_url !== 'undefined' ? schema_author_url: site_url + '/author/' + site_name.toLowerCase() %>",
+"image": {
+"@type": "ImageObject",
+"@id": "<%= typeof schema_author_image !== 'undefined' ? schema_author_image: 'https://secure.gravatar.com/avatar/ab04442537d717b73fab19403a00c802db3e20af6389304690fb313b5c0ae3ba?s=96&d=mm&r=g' %>",
+"url": "<%= typeof schema_author_image !== 'undefined' ? schema_author_image: 'https://secure.gravatar.com/avatar/ab04442537d717b73fab19403a00c802db3e20af6389304690fb313b5c0ae3ba?s=96&d=mm&r=g' %>",
+"caption": "<%= typeof schema_author_name !== 'undefined' ? schema_author_name: site_name %>",
+"inLanguage": "id"
+},
+"sameAs": ["<%= site_url %>"]
+},
+{
+"@type": "BlogPosting",
+"headline": "<%= typeof seo_title !== 'undefined' ? seo_title: current_title %>",
+"datePublished": "<%= typeof schema_date !== 'undefined' ? schema_date: new Date().toISOString().replace('Z', '+07:00') %>",
+"dateModified": "<%= typeof schema_date !== 'undefined' ? schema_date: new Date().toISOString().replace('Z', '+07:00') %>",
+"articleSection": "<%= typeof schema_sections !== 'undefined' ? schema_sections.join(', '): 'Bokep Terbaru, Bokep Viral' %>",
+"author": {
+"@id": "<%= typeof schema_author_url !== 'undefined' ? schema_author_url: site_url + '/author/' + site_name.toLowerCase() %>",
+"name": "<%= typeof schema_author_name !== 'undefined' ? schema_author_name: site_name %>"
+},
+"publisher": {
+"@id": "<%= site_url %>/#person"
+},
+"description": "<%= typeof seo_description !== 'undefined' ? seo_description.replace(/"/g, '&quot;'): current_desc.replace(/"/g, '&quot;') %>",
+"name": "<%= typeof seo_title !== 'undefined' ? seo_title: current_title %>",
+"@id": "<%= typeof seo_canonical !== 'undefined' ? seo_canonical: current_url %>/#richSnippet",
+"isPartOf": {
+"@id": "<%= typeof seo_canonical !== 'undefined' ? seo_canonical: current_url %>/#webpage"
+},
+"image": {
+"@id": "<%= typeof og_image !== 'undefined' ? og_image: current_image %>"
+},
+"inLanguage": "id",
+"mainEntityOfPage": {
+"@id": "<%= typeof seo_canonical !== 'undefined' ? seo_canonical: current_url %>/#webpage"
+}
+}]
+}
+</script>
+<%
+} else {
+%>
+<!-- Fallback Schema untuk halaman non-video -->
+<script type="application/ld+json">
+{
+"@context": "https://schema.org",
+"@type": "WebSite",
+"name": "<%= site_name %>",
+"description": "<%= current_desc %>",
+"url": "<%= site_url %>",
+"potentialAction": {
+"@type": "SearchAction",
+"target": "<%= site_url %>/search?q={search_term_string}",
+"query-input": "required name=search_term_string"
+}
+}
+</script>
+<%
+} %>
+<!-- /Plugin WordPress Rank Math SEO -->
+
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+width: 8px;
+}
+::-webkit-scrollbar-track {
+background: #181818;
+}
+::-webkit-scrollbar-thumb {
+background: #374151;
+border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+background: #db2777;
+}
+.aspect-video {
+aspect-ratio: 16 / 9;
+}
+.line-clamp-2 {
+overflow: hidden;
+display: -webkit-box;
+-webkit-line-clamp: 2;
+-webkit-box-orient: vertical;
+}
+/* Animation untuk mobile menu */
+@keyframes slideDown {
+from {
+opacity: 0;
+transform: translateY(-10px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+.animate-slideDown {
+animation: slideDown 0.3s ease-out;
+}
+</style>
+</head>
+<body class="bg-black text-gray-200 font-sans min-h-screen flex flex-col selection:bg-pink-500 selection:text-white">
+
+<header>
+<!-- Desktop Navigation -->
+<nav class="bg-black backdrop-blur-sm border-b border-gray-800 shadow-lg sticky top-0 z-50">
+<div class="container mx-auto px-4 py-3 flex justify-between items-center">
+
+<!-- Logo -->
+<div class="flex items-center gap-4">
+<a href="/" class="flex items-center gap-2 group">
+<img src="<%= typeof logo_url !== 'undefined' ? logo_url: '/uploads/logo.png' %>"
+alt="<%= site_name %> Logo"
+class="w-8 h-8 rounded object-cover transform group-hover:rotate-12 transition bg-black"
+onerror="this.style.display='none'">
+<span class="text-xl font-bold text-white tracking-tight hidden sm:inline">
+<%= site_name || 'KingBokep' %>
+</span>
+<span class="text-xl font-bold text-white tracking-tight sm:hidden">
+<%= site_name || 'KingBokep' %></span>
+</a>
+
+<!-- Desktop Menu -->
+<div class="hidden md:flex items-center gap-4 ml-6">
+<a href="/" class="text-gray-300 hover:text-pink-500 transition font-medium px-3 py-1 rounded-lg hover:bg-black">
+Beranda
+</a>
+<a href="/category/bokep-terbaru" class="text-gray-300 hover:text-pink-500 transition font-medium px-3 py-1 rounded-lg hover:bg-black">
+Terbaru
+</a>
+<a href="/category/bokep-bocil" class="text-gray-300 hover:text-pink-500 transition font-medium px-3 py-1 rounded-lg hover:bg-black">
+Bokep Bocil
+</a>
+<a href="/tag/avtub" class="text-gray-300 hover:text-pink-500 transition font-medium px-3 py-1 rounded-lg hover:bg-black">
+AVTub
+</a>
+<a href="/tag/sebokep" class="text-gray-300 hover:text-pink-500 transition font-medium px-3 py-1 rounded-lg hover:bg-black">
+SeBokep
+</a>
+<a href="/category/bokep-viral" class="text-gray-300 hover:text-pink-500 transition font-medium px-3 py-1 rounded-lg hover:bg-black">
+Viral
+</a>
+</div>
+</div>
+
+<!-- Desktop Search Form -->
+<div class="hidden md:flex flex-grow max-w-lg mx-6">
+<form action="/search" method="GET" class="flex w-full">
+<div class="relative w-full">
+<input type="text" name="q"
+placeholder="Cari video..."
+value="<%= typeof q !== 'undefined' ? q: '' %>"
+class="w-full bg-black text-gray-200 text-sm rounded-l-lg pl-4 pr-4 py-2.5 border border-gray-700 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all placeholder-gray-500">
+</div>
+<button type="submit" class="bg-pink-600 hover:bg-pink-700 text-white px-5 py-2.5 rounded-r-lg text-sm font-medium transition-colors flex items-center gap-2">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+</svg>
+<span class="hidden lg:inline">Cari</span>
+</button>
+</form>
+</div>
+
+<!-- Mobile Menu Toggle & Search Button -->
+<div class="flex items-center gap-3 md:hidden">
+<!-- Mobile Search Button -->
+<button id="mobile-search-toggle" aria-label="Search" class="p-2 rounded-lg text-gray-300 hover:bg-black transition">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+</svg>
+</button>
+
+<!-- Mobile Menu Toggle -->
+<button id="mobile-menu-toggle" aria-label="Open Menu" class="p-2 rounded-lg text-gray-300 hover:bg-black transition">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+</svg>
+</button>
+</div>
+
+<!-- Desktop Login/Admin (jika ada) -->
+<% if (typeof isLoggedIn !== 'undefined' && isLoggedIn) {
+%>
+<div class="hidden md:flex items-center">
+<a href="/admin" class="text-sm text-gray-300 hover:text-pink-500 transition">Admin</a>
+</div>
+<%
+} %>
+
+</div>
+
+<!-- Mobile Search Form (Tersembunyi default) -->
+<div id="mobile-search-form" class="hidden md:hidden container mx-auto px-4 pb-3">
+<form action="/search" method="GET" class="flex w-full">
+<div class="relative w-full">
+<input type="text" name="q"
+placeholder="Cari video..."
+value="<%= typeof q !== 'undefined' ? q: '' %>"
+class="w-full bg-black text-gray-200 text-sm rounded-l-lg pl-4 pr-4 py-2.5 border border-gray-700 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all placeholder-gray-500">
+</div>
+<button type="submit" class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2.5 rounded-r-lg text-sm font-medium transition-colors flex items-center gap-2">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+</svg>
+</button>
+</form>
+</div>
+</nav>
+
+<!-- Mobile Menu (Tersembunyi default) -->
+<div id="mobile-menu" class="hidden md:hidden bg-black border-b border-gray-700 shadow-lg">
+<div class="container mx-auto px-4 py-4">
+<div class="flex flex-col space-y-3">
+<a href="/" class="text-gray-300 hover:text-pink-500 transition font-medium px-3 py-2 rounded-lg hover:bg-gray-700 flex items-center gap-2">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+</svg>
+Beranda
+</a>
+<a href="/category/bokep-terbaru" class="text-gray-300 hover:text-pink-500 transition font-medium px-3 py-2 rounded-lg hover:bg-gray-700 flex items-center gap-2">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+</svg>
+Terbaru
+</a>
+<a href="/tag/avtub" class="text-gray-300 hover:text-pink-500 transition font-medium px-3 py-2 rounded-lg hover:bg-gray-700 flex items-center gap-2">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path>
+</svg>
+AVTub
+</a>
+<a href="/tag/sebokep" class="text-gray-300 hover:text-pink-500 transition font-medium px-3 py-2 rounded-lg hover:bg-gray-700 flex items-center gap-2">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+</svg>
+SeBokep
+</a>
+<a href="/category/bokep-viral" class="text-gray-300 hover:text-pink-500 transition font-medium px-3 py-2 rounded-lg hover:bg-gray-700 flex items-center gap-2">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+</svg>
+Viral
+</a>
+<a href="/category/bokep-indo" class="text-gray-300 hover:text-pink-500 transition font-medium px-3 py-2 rounded-lg hover:bg-gray-700 flex items-center gap-2">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+</svg>
+Bokep Indo
+</a>
+
+<% if (typeof isLoggedIn !== 'undefined' && isLoggedIn) {
+%>
+<div class="pt-4 border-t border-gray-700">
+<a href="/admin" class="text-gray-300 hover:text-pink-500 transition font-medium px-3 py-2 rounded-lg hover:bg-gray-700 flex items-center gap-2">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+</svg>
+Admin Panel
+</a>
+</div>
+<%
+} %>
+</div>
+</div>
+</div>
+</header>
+
+<main class="flex-grow container mx-auto px-4 py-6">
+
+<script>
+// Toggle Mobile Menu
+const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+const mobileMenu = document.getElementById('mobile-menu');
+
+mobileMenuToggle.addEventListener('click', function() {
+mobileMenu.classList.toggle('hidden');
+if (!mobileMenu.classList.contains('hidden')) {
+mobileMenu.classList.add('animate-slideDown');
+// Sembunyikan search form jika terbuka
+mobileSearchForm.classList.add('hidden');
+}
+});
+
+// Toggle Mobile Search Form
+const mobileSearchToggle = document.getElementById('mobile-search-toggle');
+const mobileSearchForm = document.getElementById('mobile-search-form');
+
+mobileSearchToggle.addEventListener('click', function() {
+mobileSearchForm.classList.toggle('hidden');
+if (!mobileSearchForm.classList.contains('hidden')) {
+mobileSearchForm.classList.add('animate-slideDown');
+// Sembunyikan menu jika terbuka
+mobileMenu.classList.add('hidden');
+// Focus ke input search
+const searchInput = mobileSearchForm.querySelector('input[name="q"]');
+if (searchInput) {
+searchInput.focus();
+}
+}
+});
+
+// Close menus when clicking outside
+document.addEventListener('click', function(event) {
+if (!mobileMenu.contains(event.target) && !mobileMenuToggle.contains(event.target)) {
+mobileMenu.classList.add('hidden');
+}
+if (!mobileSearchForm.contains(event.target) && !mobileSearchToggle.contains(event.target)) {
+mobileSearchForm.classList.add('hidden');
+}
+});
+
+// Close menu when clicking Esc key
+document.addEventListener('keydown', function(event) {
+if (event.key === 'Escape') {
+mobileMenu.classList.add('hidden');
+mobileSearchForm.classList.add('hidden');
+}
+});
+</script>

@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+# 1. Block Admin & API (Keamanan)
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api/
+
+# 2. Block Internal Search (SEO Best Practice)
+# Google menyarankan untuk tidak mengindeks hasil pencarian internal
+Disallow: /search
+Disallow: /search*
+Disallow: /search.php
+Disallow: /*?q=
+Disallow: /*&q=
+
+# 3. Block System Files / Legacy
+Disallow: /includes/
+Disallow: /login.php
+Disallow: /admin.php
+
+# 4. Sitemaps (Agar Googlebot mudah menemukan konten)
+Sitemap: https://bokeptube.web.id/sitemap.xml
+Sitemap: https://bokeptube.web.id/sitemap-video.xml
