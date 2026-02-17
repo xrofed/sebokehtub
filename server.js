@@ -49,6 +49,16 @@ function escapeXml(unsafe) {
         .replace(/</g, '&lt;');
 }
 
+// Fungsi helper untuk membuat URL slug yang aman
+function cleanSlug(text) {
+    if (!text) return '';
+    return slugify(text, { 
+        lower: true,      // ubah ke huruf kecil
+        strict: true,     // hapus karakter khusus
+        replacement: '-'  // ganti spasi dengan strip
+    });
+}
+
 // --- CACHE HELPER MIDDLEWARE ---
 // Fungsi untuk mem-bypass database jika data ada di memori
 const cacheMiddleware = (duration) => (req, res, next) => {
