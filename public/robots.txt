@@ -20,5 +20,5 @@ Disallow: /login.php
 Disallow: /admin.php
 
 # 4. Sitemaps (Agar Googlebot mudah menemukan konten)
-Sitemap: https://bokeptube.web.id/sitemap.xml
-Sitemap: https://bokeptube.web.id/sitemap-video.xml
+Sitemap: https://subokep.online/sitemap.xml
+Sitemap: https://subokep.online/sitemap-video.xml
