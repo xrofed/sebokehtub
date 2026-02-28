@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Scraper Panel - Node.js</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <nav class="bg-gray-800 p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-white text-xl font-bold">Admin Panel</h1>
+            <div class="flex gap-4">
+                <a href="/" class="text-pink-400 hover:text-white">Lihat Website &rarr;</a>
+                <a href="/admin/logout" class="text-red-400 hover:text-white text-sm">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto mt-10 p-6 bg-white rounded-lg shadow-xl max-w-4xl">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">Scraper Video Massal</h2>
+        
+        <form id="scrape-form" class="space-y-6">
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2">List URL (Satu per baris):</label>
+                <textarea id="scrape_urls" rows="5" class="w-full py-2 px-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" placeholder="https://example.com/video1..."></textarea>
+            </div>
+            
+            <div class="border-t pt-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Upload File .txt:</label>
+                <input type="file" id="scrape_file" accept=".txt" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-gray-300 rounded-md p-2"/>
+            </div>
+            
+            <button type="submit" id="submit-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition flex items-center justify-center gap-2">
+                <span>🚀</span> Mulai Scrape
+            </button>
+        </form>
+
+        <div class="mt-8">
+            <div class="mb-2 flex justify-between items-center">
+                <span class="text-sm font-medium text-gray-700">Progress: <span id="progress-text">0%</span></span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+                <div id="progress-bar" class="bg-green-600 h-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+            
+            <div class="mt-6">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-medium text-gray-700">Log Proses</span>
+                    <button onclick="document.getElementById('log').innerHTML=''" class="text-xs bg-gray-200 py-1 px-3 rounded">Clear</button>
+                </div>
+                <div id="log" class="bg-gray-900 text-green-400 font-mono text-xs p-4 rounded-lg h-64 overflow-y-auto border border-gray-700">
+                    <div class="text-gray-400">Menunggu input...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('scrape-form');
+        const log = document.getElementById('log');
+        const pBar = document.getElementById('progress-bar');
+        const pText = document.getElementById('progress-text');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const textareaUrls = document.getElementById('scrape_urls').value.split('\n').map(u => u.trim()).filter(u => u);
+            const fileInput = document.getElementById('scrape_file');
+            
+            let finalUrls = [...textareaUrls];
+
+            // Baca file jika ada
+            if (fileInput.files.length > 0) {
+                const fileContent = await fileInput.files[0].text();
+                const fileUrls = fileContent.split('\n').map(u => u.trim()).filter(u => u);
+                finalUrls = [...new Set([...finalUrls, ...fileUrls])];
+            }
+
+            if (finalUrls.length === 0) return alert('Masukkan URL!');
+            startBatchProcess(finalUrls);
+        });
+
+        async function startBatchProcess(urls) {
+            log.innerHTML = `<div class="text-blue-400">Memulai scraping ${urls.length} URL...</div>`;
+            let done = 0;
+            let success = 0;
+            let failed = 0;
+
+            for (const url of urls) {
+                const currentIndex = done + 1;
+                log.innerHTML += `<div class="text-gray-500">[${currentIndex}/${urls.length}] Scrape: ${url.substring(0, 50)}...</div>`;
+                log.scrollTop = log.scrollHeight;
+
+                try {
+                    const response = await fetch('/api/scrape', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ url })
+                    });
+                    const result = await response.text();
+                    
+                    if (result.includes('✅')) success++; else failed++;
+                    log.innerHTML += `<div class="border-b border-gray-800 py-1">${result}</div>`;
+                } catch (err) {
+                    failed++;
+                    log.innerHTML += `<div class="text-red-500">❌ Error: ${err.message}</div>`;
+                }
+
+                done++;
+                const percent = Math.round((done / urls.length) * 100);
+                pBar.style.width = percent + '%';
+                pText.textContent = percent + '%';
+                log.scrollTop = log.scrollHeight;
+                
+                // Jeda 500ms antar request
+                await new Promise(r => setTimeout(r, 500));
+            }
+            log.innerHTML += `<div class="mt-4 text-white font-bold">🏁 SELESAI! (Berhasil: ${success}, Gagal: ${failed})</div>`;
+        }
+    </script>
+</body>
+</html>

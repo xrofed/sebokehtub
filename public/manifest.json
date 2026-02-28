@@ -1,0 +1,25 @@
+{
+    "name": "Subokep",
+    "short_name": "Subokep",
+    "description": "Nonton Bokep Bocil Terbaru, Bokep Chindo, Bokep Colmek, Bokep Hijab",
+    "icons": [
+        {
+            "src": "/uploads/favicon.ico",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/uploads/favicon.ico",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "theme_color": "#ff4081",
+    "background_color": "#ffffff",
+    "display": "standalone",
+    "start_url": "/?source=pwa",
+    "scope": "/",
+    "orientation": "any"
+}
